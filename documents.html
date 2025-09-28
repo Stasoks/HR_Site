@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>documents accept</title>
+    <link rel="icon" type="image/x-icon" href="static_login.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .documents-container {
+            background: #2a2a2a;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 660px;
+            width: 90%;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .documents-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .documents-header h1 {
+            font-size: 28px;
+            margin: 0 0 10px 0;
+            color: white;
+        }
+
+        .documents-header p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .documents-content {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #22c55e;
+            font-size: 22px;
+        }
+
+        .document-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #22c55e;
+        }
+
+        .document-item p {
+            margin: 0;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .document-link {
+            color: #22c55e;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .document-link:hover {
+            text-decoration: underline;
+        }
+
+        .confirmation-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .confirmation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .confirmation-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #22c55e;
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .confirmation-checkbox.checked {
+            background: #22c55e;
+        }
+
+        .confirmation-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .confirmation-text {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .accept-button {
+            width: 100%;
+            padding: 15px;
+            background: #22c55e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.2s ease;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .accept-button.enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .accept-button.enabled:hover {
+            background: #16a34a;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 16px rgba(34, 197, 94, 0.3);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .welcome-notification {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .welcome-content {
+            background: #2a2a2a;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+        }
+
+        .welcome-content h2 {
+            color: white;
+            font-size: 28px;
+            margin: 0 0 15px 0;
+        }
+
+        .welcome-content p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .welcome-icon {
+            font-size: 60px;
+            color: #22c55e;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="documents-container">
+        <div class="documents-header">
+            <h1><i class="fas fa-file-contract"></i> Required Documents Review</h1>
+            <p>Please review and accept all documents before continuing</p>
+        </div>
+
+        <div class="documents-content">
+            <div class="section-title">
+                <i class="fas fa-eye"></i>
+                Document Review Required
+            </div>
+
+            <p style="margin-bottom: 25px; opacity: 0.9;">
+                Before joining Stake HR Portal, please review the following documents:
+            </p>
+
+            <div class="document-item">
+                <p><i class="fas fa-file-alt"></i> By joining our platform, you acknowledge that you have read and understood our <a href="https://stakehr.com/documents/view/7f279f76-5713-4590-a04b-9993509cd24b" class="document-link">Terms of Service</a>, which outlines the rules and regulations for using our platform.</p>
+            </div>
+
+            <div class="document-item">
+                <p><i class="fas fa-shield-alt"></i> Our <a href="https://stakehr.com/documents/view/d4a80916-25af-4ebd-bf0b-7046f522987b" class="document-link">Privacy Policy</a> explains how we collect, use, and protect your personal information in accordance with applicable data protection laws.</p>
+            </div>
+
+            <div class="document-item">
+                <p><i class="fas fa-book"></i> Please also review the <a href="https://stakehr.com/documents/view/35edf4d5-9437-42a2-8e86-29183987e465" class="document-link">Employee Handbook</a>, which contains important information about your employment, company policies, and procedures.</p>
+            </div>
+
+            <div class="confirmation-section">
+                <div class="section-title">
+                    <i class="fas fa-check-circle"></i>
+                    Confirmation Required
+                </div>
+
+                <div class="confirmation-item">
+                    <div class="confirmation-checkbox" id="confirmCheckbox"></div>
+                    <div class="confirmation-text">
+                        I confirm that I have read and understood all the documents linked above, including the Terms of Service, Privacy Policy, and Employee Handbook.
+                    </div>
+                </div>
+
+                <button class="accept-button" id="acceptButton" disabled>
+                    <i class="fas fa-arrow-right"></i> Continue to Platform
+                </button>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner fa-spin"></i> Setting up your account...
+        </div>
+    </div>
+
+    <!-- Welcome Notification -->
+    <div class="welcome-notification" id="welcomeNotification">
+        <div class="welcome-content">
+            <div class="welcome-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Welcome to HR Portal!</h2>
+            <p>Your account has been successfully activated. You can now access the platform.</p>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is authenticated
+        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+
+        if (!token || !user) {
+            // Redirect to main page if not authenticated
+            window.location.href = '/';
+        }
+
+        // Confirmation checkbox functionality
+        const confirmCheckbox = document.getElementById('confirmCheckbox');
+        const acceptButton = document.getElementById('acceptButton');
+
+        confirmCheckbox.addEventListener('click', function() {
+            this.classList.toggle('checked');
+            
+            if (this.classList.contains('checked')) {
+                acceptButton.classList.add('enabled');
+                acceptButton.disabled = false;
+            } else {
+                acceptButton.classList.remove('enabled');
+                acceptButton.disabled = true;
+            }
+        });
+
+        // Accept button functionality
+        acceptButton.addEventListener('click', async function() {
+            if (!this.classList.contains('enabled')) return;
+
+            try {
+                // Show loading
+                document.querySelector('.documents-container').style.display = 'none';
+                document.getElementById('loading').style.display = 'block';
+
+                // Simulate processing time
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Update user status (mark documents as accepted)
+                const response = await fetch('/api/accept-documents', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Documents accepted response:', data);
+                    
+                    // Update user data in localStorage with documents_accepted = true
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    console.log('Updated user data in localStorage:', data.user);
+                    
+                    // Show welcome notification
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('welcomeNotification').style.display = 'flex';
+                    
+                    // Redirect to main site after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 3000);
+                } else {
+                    throw new Error('Failed to accept documents');
+                }
+            } catch (error) {
+                console.error('Error accepting documents:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.querySelector('.documents-container').style.display = 'block';
+                alert('Произошла ошибка. Попробуйте еще раз.');
+            }
+        });
+    </script>
+</body>
+</html>

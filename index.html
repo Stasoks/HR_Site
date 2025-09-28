@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HR Portal</title>
+    <link rel="icon" type="image/x-icon" href="static/favicon_login.png">
+    <link rel="stylesheet" href="static/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Auth Forms -->
+    <div id="auth-container" class="auth-container">
+        <!-- Login Form -->
+        <div id="login-form" class="auth-form">
+            <div class="auth-header">
+                <h2>Sign In</h2>
+                <p>Sign in to your account</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn-primary">Sign In</button>
+            </form>
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="#" id="showRegister">Create one</a></p>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form" class="auth-form hidden">
+            <div class="auth-header">
+                <h2>Create Account</h2>
+                <p>Fill in the data for registration</p>
+            </div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="telegramUsername">Telegram Username</label>
+                    <input type="text" id="telegramUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn-primary">Create Account</button>
+            </form>
+            <div class="auth-footer">
+                <p>Already have an account? <a href="#" id="showLogin">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app-container" class="app-container hidden">
+        <!-- Home Section -->
+        <div id="home-section" class="section active">
+            <div class="balance-card">
+                <div class="balance-info">
+                    
+                    <div class="balance-details">
+                        <div class="balance-label">Current Balance</div>
+                        <div class="balance-amount" id="balanceAmount">$100.00</div>
+                        
+                    </div>
+                    
+                </div>
+                <button class="withdraw-btn" id="withdrawBtn">
+                    <i class="fas fa-download"></i>
+                    Withdraw
+                </button>
+            </div>
+
+            <!-- Withdrawals quick actions -->
+            <div style="margin-top: 8px; margin-bottom: 8px;">
+                <button id="openWithdrawalsMenuBtn" class="primary-btn" style="width: 100%; padding: 14px 16px; border-radius: 12px;">
+                    💸 Withdrawals
+                </button>
+            </div>
+
+            <div class="news-section">
+                <div class="news-header">
+                    <div class="news-title">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Company News</span>
+                    </div>
+                    <div class="news-subtitle">Stay updated with latest announcements</div>
+                    <div class="news-count">0 Updates</div>
+                </div>
+                <div class="news-list" id="newsList">
+                    <!-- News items will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tasks Section -->
+        <div id="tasks-section" class="section">
+            <div class="tasks-summary">
+                <div class="summary-card">
+                    <i class="fas fa-check"></i>
+                    <div class="summary-number" id="availableTasks">1</div>
+                    <div class="summary-label">Available</div>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-clock"></i>
+                    <div class="summary-number" id="myTasks">3</div>
+                    <div class="summary-label">My Tasks</div>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-dollar-sign"></i>
+                    <div class="summary-number" id="completedTasks">0</div>
+                    <div class="summary-label">Completed</div>
+                </div>
+            </div>
+
+            <div class="tasks-filters">
+                <button class="filter-btn active" data-filter="available">
+                    <i class="fas fa-check"></i>
+                    Available <span id="availableCount">(1)</span>
+                </button>
+                <button class="filter-btn" data-filter="my_tasks">
+                    <i class="fas fa-clock"></i>
+                    My Tasks <span id="myTasksCount">(3)</span>
+                </button>
+                <button class="filter-btn" data-filter="revision">
+                    <i class="fas fa-file-alt"></i>
+                    Revision <span id="revisionCount">(0)</span>
+                </button>
+                <button class="filter-btn" data-filter="done">
+                    <i class="fas fa-dollar-sign"></i>
+                    Done <span id="doneCount">(0)</span>
+                </button>
+            </div>
+
+            <div class="tasks-list" id="tasksList">
+                <!-- Tasks will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Chat Section -->
+        <div id="chat-section" class="section">
+            <div class="chat-header">
+                <div class="chat-tabs">
+                    <button class="chat-tab active" data-chat="general">
+                        <i class="fas fa-comments"></i>
+                        General Chat
+                        <span class="unread-badge general-unread" id="generalUnreadBadge" style="display: none;">0</span>
+                    </button>
+                    <button class="chat-tab" data-chat="support">
+                        <i class="fas fa-headset"></i>
+                        Support
+                        <span class="unread-badge support-unread" id="supportUnreadBadge" style="display: none;">0</span>
+                    </button>
+                </div>
+                <div class="chat-status">
+                    <span id="chatStatusIndicator" class="status-indicator">
+                        <i class="fas fa-circle"></i>
+                        <span class="status-text">Live</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be loaded here -->
+            </div>
+
+            <div class="chat-input">
+                <input type="text" id="messageInput" placeholder="Type a message...">
+                <button id="sendMessage">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Awards Section -->
+        <div id="awards-section" class="section">
+            <div class="awards-header">
+                <i class="fas fa-trophy"></i>
+                <h2>Awards & Recognition</h2>
+                <p>Celebrating outstanding team performance</p>
+            </div>
+
+            <div class="awards-content">
+                <div class="award-category">
+                    <div class="category-header top-earners">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span>Top Earners</span>
+                        <span class="award-count">5 awards</span>
+                    </div>
+                    <div class="award-list" id="topEarnersList">
+                        <!-- Top earners will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="award-category">
+                    <div class="category-header most-productive">
+                        <i class="fas fa-bullseye"></i>
+                        <span>Most Productive</span>
+                        <span class="award-count">5 awards</span>
+                    </div>
+                    <div class="award-list" id="mostProductiveList">
+                        <!-- Most productive will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="award-category">
+                    <div class="category-header quality-leaders">
+                        <i class="fas fa-star"></i>
+                        <span>Quality Leaders</span>
+                        <span class="award-count">5 awards</span>
+                    </div>
+                    <div class="award-list" id="qualityLeadersList">
+                        <!-- Quality leaders will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profile-section" class="section">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">
+                    <span id="profileInitials">AT</span>
+                </div>
+                <div class="profile-info">
+                    <h3 id="profileName">Alex Trevo</h3>
+                    <p id="profileEmail">alextrevo2553@gmail.com</p>
+                    <div class="profile-status">
+                        <div class="verification-status">
+                            <span class="status-badge unverified" id="verificationBadge">
+                                <i class="fas fa-times"></i>
+                                Unverified
+                            </span>
+                        </div>
+                        
+                        <div class="user-level-status">
+                            <span class="status-badge level-basic" id="levelBadge">
+                                <i class="fas fa-layer-group"></i>
+                                Base Level
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h4>Account Information</h4>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <div class="info-content">
+                        <span class="info-label">Email</span>
+                        <span class="info-value" id="profileEmailValue">alextrevo2553@gmail.com</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-user"></i>
+                    <div class="info-content">
+                        <span class="info-label">Full Name</span>
+                        <span class="info-value" id="profileFullName">Alex Trevo</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <div class="info-content">
+                        <span class="info-label">Role</span>
+                        <span class="info-value" id="profileRole">User</span>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="btn-primary" id="applyVerification">
+                        <i class="fas fa-check"></i>
+                        Apply for Verification
+                    </button>
+                    
+                    
+                    
+                    <button class="btn-danger" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </button>
+                    <button class="btn-secondary" id="showIosInstallation">
+                        <i class="fas fa-mobile-alt"></i>
+                        Install App
+                    </button>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h4>Activity History</h4>
+                <div id="activityHistory">
+                    <div class="activity-item">
+                        <i class="fas fa-user"></i>
+                        <div class="activity-content">
+                            <div class="activity-title">Account Created</div>
+                            <div class="activity-message">Welcome to the team!</div>
+                        </div>
+                        <span class="activity-tag">System</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section"> 
+                <h4>Statuses</h4>
+                <div class="status-item">
+                    <h5 id="basicStatus">Basic</h5>
+                    <p>Initial status for new platform users</p>
+                </div>
+
+                <div class="status-item">
+                    <h5 id="silverStatus">Silver</h5>
+                    <p>Enhanced status with additional privileges for active users</p>
+                    <p>(to get status complete all tasks for base status)</p>
+                    <p>Benefits:</p>
+                    <ul>
+                        <li>Access to silver tasks</li>
+                        <li>Standard withdrawal limits</li>
+                        <li>24/7 Support</li>
+                        <li>Priority processing</li>
+                    </ul>
+                </div>
+
+                <div class="status-item">
+                    <h5 id="goldStatus">Gold</h5>
+                    <p>Premium status with exclusive benefits for experienced users</p>
+                    <p>(to get status complete 50 tasks for silver status)</p>
+                    <p>Benefits:</p>
+                    <ul>
+                        <li>Access to gold tasks</li>
+                        <li>Increased withdrawal limits</li>
+                        <li>Fast processing</li>
+                        <li>Special bonuses</li>
+                        <li>Personal manager</li>
+                    </ul>
+                </div>
+
+                <div class="status-item">
+                    <h5 id="platinumStatus">Platinum</h5>
+                    <p>Highest status with maximum privileges for VIP users</p>
+                    <p>(to get status complete 200 tasks for silver and gold status)</p>
+                    <p>Benefits:</p>
+                    <ul>
+                        <li>Access to platinum tasks</li>
+                        <li>Maximum withdrawal limits</li>
+                        <li>Instant processing</li>
+                        <li>VIP support</li>
+                        <li>Exclusive promotions</li>
+                        <li>Personal terms</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-section="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" data-section="tasks">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </button>
+            <button class="nav-item" data-section="chat">
+                <i class="fas fa-comments"></i>
+                <span>Chat</span>
+                <div class="notification-badge" id="chatNotification" style="display:none;">0</div>
+            </button>
+            <button class="nav-item" data-section="awards">
+                <i class="fas fa-trophy"></i>
+                <span>Awards</span>
+            </button>
+            <button class="nav-item" data-section="profile">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Auth is now handled on separate /login page -->
+
+    <!-- Document Review Modal -->
+    <div id="documentModal" class="document-modal" style="display: none;">
+        <div class="document-modal-content">
+            <div class="document-header">
+                <div class="icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <h1>Required Documents Review</h1>
+                <p>Please review and accept all documents before continuing</p>
+            </div>
+
+            <div class="document-section">
+                <h3>
+                    <i class="fas fa-eye section-icon"></i>
+                    Document Review Required
+                </h3>
+                <p style="margin-bottom: 20px;">Before joining Stake HR Portal, please review the following documents:</p>
+                
+                <div class="document-item terms">
+                    <i class="fas fa-file-alt item-icon"></i>
+                    <div>
+                        By joining our platform, you acknowledge that you have read and understood our 
+                        <a href="#" class="document-link">Terms of Service</a>, 
+                        which outlines the rules and regulations for using our platform.
+                    </div>
+                </div>
+
+                <div class="document-item privacy">
+                    <i class="fas fa-shield-alt item-icon"></i>
+                    <div>
+                        Our <a href="#" class="document-link">Privacy Policy</a> 
+                        explains how we collect, use, and protect your personal information in accordance with applicable data protection laws.
+                    </div>
+                </div>
+
+                <div class="document-item handbook">
+                    <i class="fas fa-book item-icon"></i>
+                    <div>
+                        Please also review the <a href="#" class="document-link">Employee Handbook</a>, 
+                        which contains important information about your employment, company policies, and procedures.
+                    </div>
+                </div>
+            </div>
+
+            <div class="confirmation-section">
+                <h3>
+                    <i class="fas fa-check-circle" style="color: #48bb78;"></i>
+                    Confirmation Required
+                </h3>
+                
+                <div class="confirmation-checkbox">
+                    <input type="checkbox" id="confirmDocumentsModal">
+                    <label for="confirmDocumentsModal">
+                        I confirm that I have read and understood all the documents linked above, 
+                        including the Terms of Service, Privacy Policy, and Employee Handbook.
+                    </label>
+                </div>
+            </div>
+
+            <button class="accept-button" id="acceptButtonModal" disabled>
+                <i class="fas fa-check"></i>
+                Accept and Continue
+            </button>
+        </div>
+    </div>
+
+    <!-- Welcome Notification -->
+    <div class="welcome-notification" id="welcomeNotificationModal">
+        <div class="icon">
+            <i class="fas fa-hands-clapping"></i>
+        </div>
+        <h2>Documents Accepted!</h2>
+        <p>Welcome to Stake HR Portal! You can now access the platform.</p>
+    </div>
+
+    <!-- Onboarding Tour Elements -->
+    <div class="tour-overlay" id="tourOverlay"></div>
+    <div class="tour-highlight" id="tourHighlight"></div>
+    <div class="tour-tooltip" id="tourTooltip">
+        <h3 id="tourTitle">Welcome!</h3>
+        <p id="tourDescription">Let's take a quick tour of the platform.</p>
+        <div class="tour-buttons">
+            <button class="tour-btn secondary" id="tourSkip">Skip Tour</button>
+            <button class="tour-btn primary" id="tourNext">Next</button>
+        </div>
+    </div>
+    <div class="tour-progress" id="tourProgress">Step 1 of 5</div>
+
+    <!-- Tour Complete Modal -->
+    <div class="tour-complete-modal" id="tourCompleteModal">
+        <div class="tour-complete-content">
+            <h2>Welcome Tour Complete!</h2>
+            <p>Great! You're now being redirected to Support chat to contact your personal manager.</p>
+            <button class="tour-complete-btn" id="goToSupport">Continue to Support</button>
+        </div>
+    </div>
+
+    <!-- Withdrawal Modal -->
+    <div class="withdrawal-modal" id="withdrawalModal">
+        <div class="withdrawal-modal-content">
+            <div class="withdrawal-modal-header">
+                <h2><i class="fas fa-download"></i> Withdrawal Request</h2>
+                <button class="close-modal-btn" id="closeWithdrawalModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="withdrawalForm" class="withdrawal-form">
+                <div class="form-group">
+                    <label for="networkCoin">Network & Coin</label>
+                    <select id="networkCoin" name="networkCoin" required>
+                        <option value="">Select network and coin</option>
+                        <option value="USDT/TRC20">USDT/TRC20</option>
+                        <option value="USDT/BEP20">USDT/BEP20</option>
+                        <option value="USDT/ETH">USDT/ETH</option>
+                        <option value="BTC/BTC">BTC/BTC</option>
+                        <option value="ETH/ETH">ETH/ETH</option>
+                        <option value="BNB/BEP20">BNB/BEP20</option>
+                        <option value="SOL/SOL">SOL/SOL</option>
+                        <option value="ADA/ADA">ADA/ADA</option>
+                        <option value="DOT/DOT">DOT/DOT</option>
+                        <option value="MATIC/MATIC">MATIC/MATIC</option>
+                        <option value="LINK/ETH">LINK/ETH</option>
+                        <option value="UNI/ETH">UNI/ETH</option>
+                        <option value="AVAX/AVAX">AVAX/AVAX</option>
+                        <option value="ATOM/ATOM">ATOM/ATOM</option>
+                        <option value="LTC/LTC">LTC/LTC</option>
+                        <option value="BCH/BCH">BCH/BCH</option>
+                        <option value="XRP/XRP">XRP/XRP</option>
+                        <option value="DOGE/DOGE">DOGE/DOGE</option>
+                        <option value="SHIB/BEP20">SHIB/BEP20</option>
+                        <option value="TRX/TRC20">TRX/TRC20</option>
+                        <option value="XLM/XLM">XLM/XLM</option>
+                        <option value="VET/VET">VET/VET</option>
+                        <option value="FIL/FIL">FIL/FIL</option>
+                        <option value="ALGO/ALGO">ALGO/ALGO</option>
+                        <option value="ICP/ICP">ICP/ICP</option>
+                        <option value="NEAR/NEAR">NEAR/NEAR</option>
+                        <option value="FTM/FTM">FTM/FTM</option>
+                        <option value="SAND/ETH">SAND/ETH</option>
+                        <option value="MANA/ETH">MANA/ETH</option>
+                        <option value="AXS/AXS">AXS/AXS</option>
+                        <option value="GALA/ETH">GALA/ETH</option>
+                        <option value="CHZ/BEP20">CHZ/BEP20</option>
+                        <option value="HOT/HOT">HOT/HOT</option>
+                        <option value="BAT/ETH">BAT/ETH</option>
+                        <option value="ZIL/ZIL">ZIL/ZIL</option>
+                        <option value="ENJ/ETH">ENJ/ETH</option>
+                        <option value="THETA/THETA">THETA/THETA</option>
+                        <option value="XTZ/XTZ">XTZ/XTZ</option>
+                        <option value="EOS/EOS">EOS/EOS</option>
+                        <option value="AAVE/ETH">AAVE/ETH</option>
+                        <option value="COMP/ETH">COMP/ETH</option>
+                        <option value="MKR/ETH">MKR/ETH</option>
+                        <option value="SNX/ETH">SNX/ETH</option>
+                        <option value="CRV/ETH">CRV/ETH</option>
+                        <option value="YFI/ETH">YFI/ETH</option>
+                        <option value="SUSHI/ETH">SUSHI/ETH</option>
+                        <option value="1INCH/ETH">1INCH/ETH</option>
+                        <option value="BAL/ETH">BAL/ETH</option>
+                        <option value="REN/ETH">REN/ETH</option>
+                        <option value="KNC/ETH">KNC/ETH</option>
+                        <option value="ZRX/ETH">ZRX/ETH</option>
+                        <option value="BAND/BAND">BAND/BAND</option>
+                        <option value="OCEAN/ETH">OCEAN/ETH</option>
+                        <option value="ANKR/ETH">ANKR/ETH</option>
+                        <option value="STORJ/ETH">STORJ/ETH</option>
+                        <option value="SKL/ETH">SKL/ETH</option>
+                        <option value="ALPHA/ETH">ALPHA/ETH</option>
+                        <option value="AUDIO/ETH">AUDIO/ETH</option>
+                        <option value="RLC/ETH">RLC/ETH</option>
+                        <option value="API3/ETH">API3/ETH</option>
+                        <option value="ARPA/ETH">ARPA/ETH</option>
+                        <option value="BADGER/ETH">BADGER/ETH</option>
+                        <option value="BICO/ETH">BICO/ETH</option>
+                        <option value="BLZ/ETH">BLZ/ETH</option>
+                        <option value="BOND/ETH">BOND/ETH</option>
+                        <option value="C98/C98">C98/C98</option>
+                        <option value="CELR/ETH">CELR/ETH</option>
+                        <option value="CFX/CFX">CFX/CFX</option>
+                        <option value="CHR/ETH">CHR/ETH</option>
+                        <option value="COTI/COTI">COTI/COTI</option>
+                        <option value="CTSI/ETH">CTSI/ETH</option>
+                        <option value="CTXC/ETH">CTXC/ETH</option>
+                        <option value="CVP/ETH">CVP/ETH</option>
+                        <option value="DASH/DASH">DASH/DASH</option>
+                        <option value="DYDX/ETH">DYDX/ETH</option>
+                        <option value="EGLD/EGLD">EGLD/EGLD</option>
+                        <option value="ELF/ETH">ELF/ETH</option>
+                        <option value="ERN/ETH">ERN/ETH</option>
+                        <option value="FARM/ETH">FARM/ETH</option>
+                        <option value="FET/ETH">FET/ETH</option>
+                        <option value="FLOW/FLOW">FLOW/FLOW</option>
+                        <option value="FORTH/ETH">FORTH/ETH</option>
+                        <option value="FXS/ETH">FXS/ETH</option>
+                        <option value="GTC/ETH">GTC/ETH</option>
+                        <option value="HBAR/HBAR">HBAR/HBAR</option>
+                        <option value="HIVE/HIVE">HIVE/HIVE</option>
+                        <option value="ICX/ICX">ICX/ICX</option>
+                        <option value="IMX/ETH">IMX/ETH</option>
+                        <option value="INJ/INJ">INJ/INJ</option>
+                        <option value="IOTX/IOTX">IOTX/IOTX</option>
+                        <option value="JASMY/ETH">JASMY/ETH</option>
+                        <option value="KAVA/KAVA">KAVA/KAVA</option>
+                        <option value="KDA/KDA">KDA/KDA</option>
+                        <option value="KEEP/ETH">KEEP/ETH</option>
+                        <option value="KLAY/KLAY">KLAY/KLAY</option>
+                        <option value="KSM/KSM">KSM/KSM</option>
+                        <option value="LDO/ETH">LDO/ETH</option>
+                        <option value="LPT/ETH">LPT/ETH</option>
+                        <option value="LRC/ETH">LRC/ETH</option>
+                        <option value="LTO/LTO">LTO/LTO</option>
+                        <option value="MASK/ETH">MASK/ETH</option>
+                        <option value="MINA/MINA">MINA/MINA</option>
+                        <option value="MIR/ETH">MIR/ETH</option>
+                        <option value="MTL/ETH">MTL/ETH</option>
+                        <option value="NEO/NEO">NEO/NEO</option>
+                        <option value="NKN/ETH">NKN/ETH</option>
+                        <option value="NMR/ETH">NMR/ETH</option>
+                        <option value="OGN/ETH">OGN/ETH</option>
+                        <option value="OM/ETH">OM/ETH</option>
+                        <option value="ONE/ONE">ONE/ONE</option>
+                        <option value="ONT/ONT">ONT/ONT</option>
+                        <option value="OP/ETH">OP/ETH</option>
+                        <option value="ORN/ETH">ORN/ETH</option>
+                        <option value="OXT/ETH">OXT/ETH</option>
+                        <option value="PERP/ETH">PERP/ETH</option>
+                        <option value="POLS/ETH">POLS/ETH</option>
+                        <option value="POND/ETH">POND/ETH</option>
+                        <option value="PUNDIX/PUNDIX">PUNDIX/PUNDIX</option>
+                        <option value="QNT/ETH">QNT/ETH</option>
+                        <option value="QTUM/QTUM">QTUM/QTUM</option>
+                        <option value="RAD/ETH">RAD/ETH</option>
+                        <option value="RARE/ETH">RARE/ETH</option>
+                        <option value="RAY/RAY">RAY/RAY</option>
+                        <option value="REEF/ETH">REEF/ETH</option>
+                        <option value="RGT/ETH">RGT/ETH</option>
+                        <option value="RNDR/ETH">RNDR/ETH</option>
+                        <option value="ROSE/ROSE">ROSE/ROSE</option>
+                        <option value="RSR/ETH">RSR/ETH</option>
+                        <option value="RVN/RVN">RVN/RVN</option>
+                        <option value="SAND/ETH">SAND/ETH</option>
+                        <option value="SCRT/SCRT">SCRT/SCRT</option>
+                        <option value="SFP/ETH">SFP/ETH</option>
+                        <option value="SHIB/ETH">SHIB/ETH</option>
+                        <option value="SLP/ETH">SLP/ETH</option>
+                        <option value="SNT/ETH">SNT/ETH</option>
+                        <option value="SPELL/ETH">SPELL/ETH</option>
+                        <option value="STRAX/STRAX">STRAX/STRAX</option>
+                        <option value="SUPER/ETH">SUPER/ETH</option>
+                        <option value="SXP/SXP">SXP/SXP</option>
+                        <option value="SYN/ETH">SYN/ETH</option>
+                        <option value="TFUEL/TFUEL">TFUEL/TFUEL</option>
+                        <option value="TLM/ETH">TLM/ETH</option>
+                        <option value="TOKE/ETH">TOKE/ETH</option>
+                        <option value="TRB/ETH">TRB/ETH</option>
+                        <option value="TRIBE/ETH">TRIBE/ETH</option>
+                        <option value="TRU/ETH">TRU/ETH</option>
+                        <option value="TVK/ETH">TVK/ETH</option>
+                        <option value="UMA/ETH">UMA/ETH</option>
+                        <option value="UNFI/ETH">UNFI/ETH</option>
+                        <option value="VTHO/VTHO">VTHO/VTHO</option>
+                        <option value="WAVES/WAVES">WAVES/WAVES</option>
+                        <option value="WOO/ETH">WOO/ETH</option>
+                        <option value="XEC/XEC">XEC/XEC</option>
+                        <option value="XEM/XEM">XEM/XEM</option>
+                        <option value="XLM/XLM">XLM/XLM</option>
+                        <option value="XRP/XRP">XRP/XRP</option>
+                        <option value="XTZ/XTZ">XTZ/XTZ</option>
+                        <option value="YGG/ETH">YGG/ETH</option>
+                        <option value="ZEN/ZEN">ZEN/ZEN</option>
+                        <option value="ZRX/ETH">ZRX/ETH</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="amount">Amount (USD)</label>
+                    <input type="number" id="amount" name="amount" min="1" step="0.01" placeholder="Enter amount in USD" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="walletAddress">Crypto Wallet Address</label>
+                    <input type="text" id="walletAddress" name="walletAddress" placeholder="Enter your wallet address" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" id="cancelWithdrawal">
+                        <i class="fas fa-times"></i>
+                        Cancel
+                    </button>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        Send Withdrawal Request
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Minimum withdrawal amount -->
+            <div class="withdrawal-info-panel" id="withdrawalInfoPanel">
+                <div class="info-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-title">Minimum Withdrawal Amount</div>
+                    <div class="info-amount" id="minWithdrawalAmount">$50.00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- iOS Installation Modal -->
+    <div class="ios-installation-modal" id="iosInstallationModal">
+        <div class="ios-installation-content">
+            <div class="ios-installation-header">
+                <h2><i class="fas fa-mobile-alt"></i> App Installation</h2>
+                <button class="close-modal-btn" id="closeIosInstallationModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="ios-installation-body">
+                <div class="ios-installation-icon">
+                    <i class="fas fa-desktop"></i>
+                </div>
+                
+                <div class="ios-installation-subtitle">
+                    <h3>iOS Installation</h3>
+                    <p>Follow these instructions to install via Safari</p>
+                </div>
+                
+                <div class="ios-installation-steps">
+                    <div class="installation-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Open Safari menu</h4>
+                            <p>Tap the <i class="fas fa-share"></i> "Share" button at the bottom</p>
+                        </div>
+                    </div>
+                    
+                    <div class="installation-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Find "Add to Home Screen"</h4>
+                            <p>Scroll down and find <i class="fas fa-plus"></i> "Add to Home Screen"</p>
+                        </div>
+                    </div>
+                    
+                    <div class="installation-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Confirm installation</h4>
+                            <p>Tap "Add" in the top right corner</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ios-installation-tip">
+                    <div class="tip-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="tip-content">
+                        <h4>Tip</h4>
+                        <p>After installation, the HR Portal icon will appear on your iPhone/iPad home screen</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ios-installation-footer">
+                <button class="ios-installation-btn" id="gotItBtn">
+                    <i class="fas fa-check"></i>
+                    Got it
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication and document acceptance
+        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+        
+        console.log('Main page: checking auth...', { token: !!token, user: !!user });
+        
+        if (!token || !user) {
+            // Clear any invalid data and redirect to login
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            console.log('No auth found, redirecting to login...');
+            window.location.href = '/login';
+        } else {
+            try {
+                // Check if user has accepted documents
+                const userData = JSON.parse(user);
+                console.log('User data:', userData);
+                console.log('Documents accepted:', userData.documents_accepted);
+                
+                if (!userData.documents_accepted) {
+                    console.log('Documents not accepted, redirecting to documents page...');
+                    window.location.href = '/documents';
+                } else {
+                    console.log('User is authenticated and documents accepted');
+                    // User is logged in and documents accepted, they're on main site
+                    window.userOnMainSite = true;
+                    
+                    // Let script.js handle the app display and tour logic
+                }
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/login';
+            }
+        }
+                   </script>
+               <script src="static/script.js?v=2024-08-11"></script>
+           </body>
+</html>

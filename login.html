@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HR Portal - Login</title>
+
+    <link rel="icon" type="image/x-icon" href="static/favicon_login.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 32px;
+            width: 100%;
+            max-width: 360px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .header-outside {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header-outside h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-outside p {
+            color: #666;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .auth-tabs {
+            display: none; /* Hide tabs to match hrstake design */
+        }
+
+        .auth-form {
+            display: block; /* Always show login form */
+        }
+
+        .register-form {
+            display: none; /* Hide register form initially */
+        }
+
+        .register-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group:first-child {
+            margin-top: 0;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #888;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px;
+            background: #111;
+            border: 2px solid #222;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #8518b3;
+        }
+
+        input::placeholder {
+            color: #555;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #8b5cf6 20%, #7c3aed 80%);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 24px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #7c3aed 20%, #8b5cf6 80%);
+        }
+
+        .submit-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .forgot-password a {
+            color: #8b5cf6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .switch-form {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .switch-form a {
+            color: #8b5cf6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #ef4444;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #7c3aed 20%, #8b5cf6 80%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #888;
+            margin-top: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 24px 20px;
+                margin: 16px;
+                max-width: 320px;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .header-outside h1 {
+                font-size: 28px;
+            }
+
+            .header-outside p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-outside">
+        <h1>Stake HR Portal</h1>
+        <p>Official user application</p>
+    </div>
+
+    <div class="login-container">
+
+        <!-- Login Form -->
+        <form class="auth-form" id="loginForm">
+            <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="submit-btn">Sign In</button>
+            
+            <div class="forgot-password">
+                <a href="#" onclick="showForgotPassword()">Forgot password?</a>
+            </div>
+        </form>
+
+        <!-- Register Form -->
+        <form class="register-form" id="registerForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="first_name" placeholder="Your first name" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="last_name" placeholder="Your last name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="registerEmail">Email</label>
+                <input type="email" id="registerEmail" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="telegramUsername">Telegram Username</label>
+                <input type="text" id="telegramUsername" name="telegram_username" placeholder="@username" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" name="password" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirm_password" placeholder="Confirm your password" required>
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">Create Account</button>
+            
+            <div class="switch-form">
+                <span>Already have an account? </span>
+                <a href="#" onclick="showLoginForm()">Sign in here</a>
+            </div>
+        </form>
+
+        <div class="switch-form" id="signupLink">
+            <span>If you don't have an account — </span>
+            <a href="#" onclick="showRegisterForm()">Sign up here</a>
+        </div>
+
+        <div class="loading" id="loading">
+            Loading...
+        </div>
+    </div>
+
+    <script>
+        // Initialize user data from localStorage
+        let currentUser = null;
+        let currentToken = null;
+
+        function initializeUserData() {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            
+            if (token && user) {
+                try {
+                    currentToken = token;
+                    currentUser = JSON.parse(user);
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                }
+            }
+        }
+
+        // Call initialization
+        initializeUserData();
+
+        // Check if user is already logged in
+        if (currentUser && currentToken) {
+            const userData = currentUser;
+            if (!userData.documents_accepted) {
+                window.location.href = '/documents';
+            } else {
+                window.location.href = '/';
+            }
+        }
+
+        // API request helper
+        async function apiRequest(endpoint, options = {}) {
+            const url = `${endpoint}`;
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                },
+                ...options
+            };
+
+            if (currentToken) {
+                config.headers.Authorization = `Bearer ${currentToken}`;
+            }
+
+            try {
+                const response = await fetch(url, config);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Request failed');
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            const existingError = document.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            
+            const container = document.querySelector('.login-container');
+            container.insertBefore(errorDiv, container.querySelector('.auth-tabs'));
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const existingSuccess = document.querySelector('.success-message');
+            if (existingSuccess) {
+                existingSuccess.remove();
+            }
+
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = message;
+            
+            const container = document.querySelector('.login-container');
+            container.insertBefore(successDiv, container.querySelector('.auth-tabs'));
+        }
+
+        // Clear messages
+        function clearMessages() {
+            const error = document.querySelector('.error-message');
+            const success = document.querySelector('.success-message');
+            if (error) error.remove();
+            if (success) success.remove();
+        }
+
+        // Show/hide loading
+        function setLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.querySelectorAll('.submit-btn').forEach(btn => {
+                btn.disabled = show;
+            });
+        }
+
+        // Form switching functions
+        function showLoginForm() {
+            clearMessages();
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('signupLink').style.display = 'block';
+        }
+
+        function showRegisterForm() {
+            clearMessages();
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('signupLink').style.display = 'none';
+        }
+
+        function showForgotPassword() {
+            alert('Please contact support to reset your password.');
+        }
+
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearMessages();
+            setLoading(true);
+
+            const formData = new FormData(e.target);
+            const loginData = {
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
+
+            try {
+                const response = await apiRequest('/login', {
+                    method: 'POST',
+                    body: JSON.stringify(loginData)
+                });
+
+                if (response.access_token) {
+                    // Store tokens and user data
+                    localStorage.setItem('token', response.access_token);
+                    localStorage.setItem('user', JSON.stringify(response.user));
+                    
+                    showSuccess('Successful login!');
+                    
+                    setTimeout(() => {
+                        if (!response.user.documents_accepted) {
+                            window.location.href = '/documents';
+                        } else {
+                            window.location.href = '/';
+                        }
+                    }, 1000);
+                }
+            } catch (error) {
+                showError(error.message || 'Login failed');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // Register form handler
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearMessages();
+
+            const formData = new FormData(e.target);
+            const registerData = {
+                first_name: formData.get('first_name'),
+                last_name: formData.get('last_name'),
+                email: formData.get('email'),
+                telegram_username: formData.get('telegram_username'),
+                password: formData.get('password'),
+                confirm_password: formData.get('confirm_password')
+            };
+
+            // Validate passwords match
+            if (registerData.password !== registerData.confirm_password) {
+                showError('Passwords do not match');
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                const response = await apiRequest('/register', {
+                    method: 'POST',
+                    body: JSON.stringify(registerData)
+                });
+
+                if (response.access_token) {
+                    // Store tokens and user data
+                    localStorage.setItem('token', response.access_token);
+                    localStorage.setItem('user', JSON.stringify(response.user));
+                    
+                    showSuccess('Registration successful! Redirecting...');
+                    
+                    setTimeout(() => {
+                        window.location.href = '/documents';
+                    }, 1000);
+                }
+            } catch (error) {
+                showError(error.message || 'Registration failed');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // Prevent any tour-related scripts from running
+        window.tourDisabled = true;
+        window.userOnMainSite = false;
+    </script>
+</body>
+</html>
+</html>
